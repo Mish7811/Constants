@@ -3,7 +3,6 @@ import { CheckCircle2, Circle, Trash2, Plus, Activity, Brain, Cross, Home, GripV
 import { DndContext, DragEndEvent, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import './index.css';
 
 type Category = 'physical' | 'mental' | 'spiritual' | 'chores';
 
@@ -15,6 +14,13 @@ interface Task {
   isNew?: boolean;
   isDeleting?: boolean;
 }
+
+const defaultTasks: Task[] = [
+  { id: '1', text: 'Morning workout', completed: false, category: 'physical' },
+  { id: '2', text: 'Meditation', completed: false, category: 'spiritual' },
+  { id: '3', text: 'Read for 30 minutes', completed: false, category: 'mental' },
+  { id: '4', text: 'Make the bed', completed: false, category: 'chores' },
+];
 
 function SortableTask({ task, onToggle, onDelete }: { task: Task; onToggle: () => void; onDelete: () => void }) {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -104,14 +110,19 @@ function SortableTask({ task, onToggle, onDelete }: { task: Task; onToggle: () =
 }
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: '1', text: 'Morning workout', completed: false, category: 'physical' },
-    { id: '2', text: 'Meditation', completed: false, category: 'spiritual' },
-    { id: '3', text: 'Read for 30 minutes', completed: false, category: 'mental' },
-    { id: '4', text: 'Make the bed', completed: false, category: 'chores' },
-  ]);
+  // Load tasks from localStorage on initial render
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    const savedTasks = localStorage.getItem('tasks');
+    return savedTasks ? JSON.parse(savedTasks) : defaultTasks;
+  });
+  
   const [newTask, setNewTask] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category>('physical');
+
+  // Save tasks to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks.filter(task => !task.isDeleting)));
+  }, [tasks]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -208,8 +219,8 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-900 p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-8 text-center pacifico-regular">
-          Daily Constants
+        <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-8 text-center">
+          Daily Goals Tracker
         </h1>
         
         {/* Add Task Form */}
