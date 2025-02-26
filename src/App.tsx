@@ -3,6 +3,7 @@ import { CheckCircle2, Circle, Trash2, Plus, Activity, Brain, Cross, Home, GripV
 import { DndContext, DragEndEvent, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import "./index.css";
 
 type Category = 'physical' | 'mental' | 'spiritual' | 'chores';
 
@@ -219,9 +220,10 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-900 p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-8 text-center">
-          Daily Goals Tracker
+        <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-8 text-center pacifico-regular">
+          Daily Constants
         </h1>
+
         
         {/* Add Task Form */}
         <form onSubmit={addTask} className="mb-8 bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-700">
